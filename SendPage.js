@@ -6,6 +6,10 @@ import {
 } from 'react-native';
 
 export default class SendPage extends Component<{}> {
+  static navigationOptions = {
+    title: 'Send coins',
+  };
+
   render() {
     return (
       <Text>SendPage</Text>
