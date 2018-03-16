@@ -11,7 +11,9 @@ import {
 class TransactionList extends Component<{}> {
   render() {
     return (
-      <Text>Placeholder</Text>
+      <View style={styles.transactions}>
+        <Text>Placeholder</Text>
+      </View>
     );
   }
 }
@@ -26,15 +28,19 @@ export default class HomePage extends Component<{}> {
   }
 
   _sendSubmit = () => {
-    this.props.navigation.navigate('Send', null)
+    this.props.navigation.navigate('Send')
   }
 
   render() {
     return (
       <View style={styles.container}>
         <TransactionList/>
-        <Button title='Receive' onPress={this._recvSubmit}/>
-        <Button title='Send' onPress={this._sendSubmit}/>
+        <View style={styles.bottomButtons}>
+          <Button 
+            title='Receive coins' onPress={this._recvSubmit}/>
+          <Button 
+            title='Send coins' onPress={this._sendSubmit}/>
+        </View>
       </View>
     );
   }
@@ -43,8 +49,18 @@ export default class HomePage extends Component<{}> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  transactions: {
+    flex: 1,
+    height: 100,
+  },
+  bottomButtons: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    margin: 2,
   },
 });
