@@ -2,28 +2,39 @@
 
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
+
+class TransactionList extends Component<{}> {
+  render() {
+    return (
+      <Text>Placeholder</Text>
+    );
+  }
+}
 
 export default class HomePage extends Component<{}> {
   static navigationOptions = {
     title: 'addr',
   };
+
+  _recvSubmit = () => {
+    this.props.navigation.navigate('Receive')
+  }
+
+  _sendSubmit = () => {
+    this.props.navigation.navigate('Send', null)
+  }
+
   render() {
     return (
       <View style={styles.container}>
-      <Text style={styles.welcome}>
-      Welcome to React Native!
-      </Text>
-      <Text style={styles.instructions}>
-      To get started, edit App.js
-      </Text>
-      <Text style={styles.instructions}>
-      Something something{"\n"}More something
-      </Text>
+        <TransactionList/>
+        <Button title='Receive' onPress={this._recvSubmit}/>
+        <Button title='Send' onPress={this._sendSubmit}/>
       </View>
     );
   }
@@ -35,15 +46,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 });
