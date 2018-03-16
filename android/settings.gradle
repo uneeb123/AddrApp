@@ -1,0 +1,3 @@
+rootProject.name = 'addrapp'
+
+include ':app'
