@@ -6,7 +6,8 @@ import {
   Text,
   View,
   Button,
-  FlatList
+  FlatList,
+  Image
 } from 'react-native';
 
 class Transaction extends Component<{}> {
@@ -60,7 +61,10 @@ class TransactionList extends Component<{}> {
 
 export default class HomePage extends Component<{}> {
   static navigationOptions = {
-    title: 'addr',
+    headerTitle: <Image
+      source={require('./logo.png')}
+      style={{ width: 120, height: 100 }}
+    />,
   };
 
   _recvSubmit = () => {

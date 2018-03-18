@@ -12,7 +12,7 @@ export default class SendPage extends Component<{}> {
 
   render() {
     return (
-      <Text>SendPage</Text>
+      <Text style={{fontFamily: 'pacifico'}}>SendPage</Text>
     );
   }
 }
