@@ -70,8 +70,20 @@ class LogoTitle extends Component<{}> {
 }
 
 export default class HomePage extends Component<{}> {
-  static navigationOptions = {
-    headerTitle: <LogoTitle/>
+  static navigationOptions = ({navigation}) => {
+    const params = navigation.state.params || {};
+
+    return {
+      headerLeft: <View style={{width: 100, height: 100}} />,
+      headerTitle: <LogoTitle/>,
+      headerRight: (
+        <Button
+          onPress={() => navigation.navigate('Info')}
+          title="Info"
+          color="#fff"
+        />
+      ),
+    }
   };
 
   _recvSubmit = () => {

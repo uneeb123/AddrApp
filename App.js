@@ -3,6 +3,7 @@
 import HomePage from './HomePage';
 import ReceivePage from './ReceivePage';
 import SendPage from './SendPage';
+import InfoPage from './InfoPage';
 
 import React, { Component } from 'react';
 import {
@@ -22,10 +23,19 @@ const App = StackNavigator(
         backgroundColor: '#298e82',
       },
       headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontFamily: 'pacifico',
-      },
     },
   }
 );
-export default App;
+
+const RootStack = StackNavigator(
+  {
+    Main: { screen: App },
+    Info: { screen: InfoPage },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);
+
+export default RootStack;
