@@ -59,12 +59,19 @@ class TransactionList extends Component<{}> {
   }
 }
 
+class LogoTitle extends Component<{}> {
+  render() {
+    return (
+      <Text style={{ fontFamily: 'pacifico', color: 'white', fontSize: 25 }}>
+        addr
+      </Text>
+    );
+  }
+}
+
 export default class HomePage extends Component<{}> {
   static navigationOptions = {
-    headerTitle: <Image
-      source={require('./logo.png')}
-      style={{ width: 120, height: 100 }}
-    />,
+    headerTitle: <LogoTitle/>
   };
 
   _recvSubmit = () => {
