@@ -9,6 +9,7 @@ import {
   FlatList,
   Image
 } from 'react-native';
+import { Icon } from 'react-native-elements'
 
 class Transaction extends Component<{}> {
   render() {
@@ -20,7 +21,7 @@ class Transaction extends Component<{}> {
         <View style={styles.addr_container}>
           <Text>{this.props.item.addr}</Text>
         </View>
-        <View style={styles.prince_container}>
+        <View style={styles.price_container}>
           <Text>{this.props.item.amount_bitcoin + "\n"}</Text>
           <Text>{"$" + this.props.item.amount_dollar}</Text>
         </View>
@@ -77,11 +78,12 @@ export default class HomePage extends Component<{}> {
       headerLeft: <View style={{width: 100, height: 100}} />,
       headerTitle: <LogoTitle/>,
       headerRight: (
-        <Button
-          onPress={() => navigation.navigate('Info')}
-          title="Info"
-          color="#fff"
-        />
+        <View style={{margin: 10}}>
+          <Icon
+            onPress={() => navigation.navigate('Info')}
+            color="#fff"
+            name='info' />
+        </View>
       ),
     }
   };
