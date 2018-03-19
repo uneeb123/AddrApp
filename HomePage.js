@@ -14,16 +14,34 @@ import { Icon } from 'react-native-elements'
 class Transaction extends Component<{}> {
   render() {
     return (
-      <View style={styles.transaction_container}>
-        <View style={styles.date_container}>
+      <View style={styles.transactionContainer}>
+        <View style={styles.dateContainer}>
           <Text>{this.props.item.date}</Text>
         </View>
-        <View style={styles.addr_container}>
+        <View style={styles.addrContainer}>
           <Text>{this.props.item.addr}</Text>
         </View>
-        <View style={styles.price_container}>
+        <View style={styles.priceContainer}>
           <Text>{this.props.item.amount_bitcoin + "\n"}</Text>
           <Text>{"$" + this.props.item.amount_dollar}</Text>
+        </View>
+      </View>
+    );
+  }
+}
+
+class AccountPanel extends Component<{}> {
+  render() {
+    return (
+      <View style={styles.accountPanel}>
+        <View style={styles.accountLabelContainer}>
+          <Text style={{fontFamily: 'monospace'}}>mBTC</Text>
+        </View>
+        <View style={styles.accountValueContainer}>
+          <Text>{"10.0"+"\n"+"90.0"}</Text>
+        </View>
+        <View style={styles.accountQRCodeContainer}>
+           <Image source={require('./sample_qrcode.png')} style={{ width: 80, height: 80 }} />
         </View>
       </View>
     );
@@ -99,12 +117,13 @@ export default class HomePage extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
+        <AccountPanel />
         <TransactionList/>
         <View style={styles.bottomButtons}>
           <Button 
-            title='Receive coins' onPress={this._recvSubmit}/>
+            color='#298e82' title='Receive coins' onPress={this._recvSubmit}/>
           <Button 
-            title='Send coins' onPress={this._sendSubmit}/>
+            color='#298e82' title='Send coins' onPress={this._sendSubmit}/>
         </View>
       </View>
     );
@@ -118,6 +137,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     padding: 5,
   },
+  accountPanel: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    margin: 2,
+    elevation: 2,
+  },
   transactions: {
     flex: 1,
   },
@@ -126,19 +151,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 2,
   },
-  transaction_container: {
+  transactionContainer: {
     flexDirection: 'row',
     backgroundColor: 'white',
     margin: 2,
     elevation: 2,
   },
-  date_container: {
+  dateContainer: {
+    margin: 1,
     flex: 1,
   },
-  addr_container: {
+  addrContainer: {
+    margin: 1,
     flex: 2,
   },
-  price_container: {
+  priceContainer: {
+    margin: 1,
     flex: 1,
+  },
+  accountLabelContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  accountValueContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  accountQRCodeContainer: {
+    flex: 1
   }
 });

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import {
-  Text
+  View
 } from 'react-native';
 
 export default class SendPage extends Component<{}> {
@@ -12,7 +12,7 @@ export default class SendPage extends Component<{}> {
 
   render() {
     return (
-      <Text style={{fontFamily: 'pacifico'}}>SendPage</Text>
+      <View />
     );
   }
 }
