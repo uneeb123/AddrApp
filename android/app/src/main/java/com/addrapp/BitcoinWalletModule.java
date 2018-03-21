@@ -2,7 +2,9 @@ package com.addrapp;
 
 import org.bitcoinj.params.MainNetParams;
 
-import android.widget.Toast;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
 
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -25,9 +27,15 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void port() {
-    Toast.makeText(getReactApplicationContext(),
-        "Using Port: " + MainNetParams.get().getPort(),
-        Toast.LENGTH_SHORT).show();
+  public void port(Promise promise) {
+    try {
+      int port = MainNetParams.get().getPort();
+
+      WritableMap map = Arguments.createMap();
+      map.putInt("port", port);
+      promise.resolve(map);
+    } catch (Exception e) {
+      promise.reject("ERROR!", e);
+    }
   }
 }
