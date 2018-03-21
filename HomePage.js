@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 
+import BitcoinWallet from './BitcoinWallet'
+
 class Transaction extends Component<{}> {
   render() {
     return (
@@ -91,6 +93,7 @@ class LogoTitle extends Component<{}> {
 export default class HomePage extends Component<{}> {
   static navigationOptions = ({navigation}) => {
     const params = navigation.state.params || {};
+    BitcoinWallet.port();
 
     return {
       headerLeft: <View style={{width: 100, height: 100}} />,
