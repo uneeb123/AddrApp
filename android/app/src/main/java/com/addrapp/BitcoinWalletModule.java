@@ -17,8 +17,11 @@ import java.util.HashMap;
 
 public class BitcoinWalletModule extends ReactContextBaseJavaModule {
 
+  private ReactApplicationContext context;
+
   public BitcoinWalletModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    context = reactContext;
   }
 
   @Override
@@ -30,6 +33,8 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
   public void port(Promise promise) {
     try {
       int port = MainNetParams.get().getPort();
+
+      BitcoinWallet walletInterface = new BitcoinWallet(context);
 
       WritableMap map = Arguments.createMap();
       map.putInt("port", port);
