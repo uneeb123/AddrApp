@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 
+import BitcoinWallet from './BitcoinWallet'
+
 class Transaction extends Component<{}> {
   render() {
     return (
@@ -105,6 +107,15 @@ export default class HomePage extends Component<{}> {
       ),
     }
   };
+
+  constructor(props) {
+    super(props);
+    this._syncBlockchain();
+  }
+
+  async _syncBlockchain() {
+    await BitcoinWallet.initiateWallet();
+  }
 
   _recvSubmit = () => {
     this.props.navigation.navigate('Receive')

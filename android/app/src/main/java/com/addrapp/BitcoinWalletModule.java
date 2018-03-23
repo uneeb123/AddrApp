@@ -18,10 +18,14 @@ import java.util.HashMap;
 public class BitcoinWalletModule extends ReactContextBaseJavaModule {
 
   private ReactApplicationContext context;
+  private BitcoinWalletAppKitInterface bw;
+
+  private String firstAddress;
 
   public BitcoinWalletModule(ReactApplicationContext reactContext) {
     super(reactContext);
     context = reactContext;
+    bw = new BitcoinWalletAppKitInterface(reactContext);
   }
 
   @Override
@@ -30,17 +34,37 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void port(Promise promise) {
+  public void initiateWallet(Promise promise) {
     try {
-      int port = MainNetParams.get().getPort();
-
-      BitcoinWallet walletInterface = new BitcoinWallet(context);
-
+      bw.downloadBlockChain(true);
+      firstAddress = bw.newAddress();
       WritableMap map = Arguments.createMap();
-      map.putInt("port", port);
+      map.putString("address", firstAddress);
       promise.resolve(map);
     } catch (Exception e) {
-      promise.reject("ERROR!", e);
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod 
+  public void getAddress(Promise promise) {
+    if (firstAddress != null) {
+      WritableMap map = Arguments.createMap();
+      map.putString("address", firstAddress);
+      promise.resolve(map);
+    } else {
+      promise.reject("ERROR", "No address found");
+    }
+  }
+
+  @ReactMethod
+  public void getBalance(Promise promise) {
+    try {
+      WritableMap map = Arguments.createMap();
+      map.putString("balance", bw.getBalance());
+      promise.resolve(map);
+    } catch (Exception e) {
+      promise.reject("ERROR", "No address found");
     }
   }
 }
