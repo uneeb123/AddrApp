@@ -36,7 +36,7 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void initiateWallet(Promise promise) {
     try {
-      bw.downloadBlockChain(true);
+      bw.downloadBlockChain(false);
       firstAddress = bw.newAddress();
       WritableMap map = Arguments.createMap();
       map.putString("address", firstAddress);

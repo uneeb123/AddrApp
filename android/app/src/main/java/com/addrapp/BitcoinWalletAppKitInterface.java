@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.facebook.react.bridge.ReactApplicationContext;
 
 public class BitcoinWalletAppKitInterface {
-        
+
   private static final String FILEPREFIX = "addr-wallet-test";
   private static final boolean TESTMODE = true;
 
@@ -27,7 +27,9 @@ public class BitcoinWalletAppKitInterface {
     if (TESTMODE) {
       params = TestNet3Params.get();
     }
-    kit = new WalletAppKit(params, new File("."), FILEPREFIX);
+
+    File dir = reactContext.getFilesDir().getParentFile();
+    kit = new WalletAppKit(params, dir, FILEPREFIX);
   }
 
   public boolean downloadBlockChain(boolean blocking) {
