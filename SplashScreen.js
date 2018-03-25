@@ -18,8 +18,8 @@ export default class SplashScreen extends Component<{}> {
     this._startSync();
   }
 
-  async _startSync() {
-    await BitcoinWallet.initiateWallet();
+  _startSync() {
+    BitcoinWallet.initiateWallet();
   }
 
   _goToHome = () => {

@@ -8,6 +8,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
+import org.bitcoinj.wallet.Wallet;
 
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -43,6 +45,10 @@ public class BitcoinWalletAppKitInterface {
     kit = new AddrWalletKit(params, dir, FILEPREFIX);
   }
 
+  public Wallet getWallet() {
+    return kit.wallet();
+  }
+
   public boolean downloadBlockChain(boolean blocking) {
     kit.setDownloadListener(listener);
     kit.setBlockingStartup(blocking);
@@ -66,13 +72,6 @@ public class BitcoinWalletAppKitInterface {
 
   public List<Address> getAddresses() {
     return kit.wallet().getWatchedAddresses();
-  }
-  
-  public String newAddress() {
-    Address addr = kit.wallet().freshReceiveAddress();
-    kit.wallet().addWatchedAddress(addr);
-    debug("New address " + addr.toString() + " allocated");
-    return addr.toString();
   }
 
   public String getBalance() {
@@ -105,6 +104,9 @@ public class BitcoinWalletAppKitInterface {
     @Override
     protected void progress(double pct, int blocksSoFar, Date date) {
       super.progress(pct, blocksSoFar, date);
+      WritableMap params = Arguments.createMap();
+      params.putDouble("percent", pct);
+      sendEvent(reactContext, "syncPercent", params);
     }
 
     @Override

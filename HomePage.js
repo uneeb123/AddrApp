@@ -10,6 +10,7 @@ import {
   Image
 } from 'react-native';
 import { Icon } from 'react-native-elements'
+import BitcoinWallet from './BitcoinWallet'
 
 class Transaction extends Component<{}> {
   render() {
@@ -30,18 +31,16 @@ class Transaction extends Component<{}> {
   }
 }
 
-class AccountPanel extends Component<{}> {
+class AccountPanel extends Component {
   render() {
     return (
-      <View style={styles.accountPanel}>
-        <View style={styles.accountLabelContainer}>
+      <View style={{backgroundColor: 'white', margin: 2, elevation: 2}}>
+        <View>
           <Text style={{fontFamily: 'monospace'}}>mBTC</Text>
         </View>
-        <View style={styles.accountValueContainer}>
-          <Text>{"10.0"+"\n"+"90.0"}</Text>
-        </View>
-        <View style={styles.accountQRCodeContainer}>
-           <Image source={require('./sample_qrcode.png')} style={{ width: 80, height: 80 }} />
+        <View>
+          <Text>{this.props.address}</Text>
+          <Text>{this.props.balance}</Text>
         </View>
       </View>
     );
@@ -108,6 +107,21 @@ export default class HomePage extends Component<{}> {
 
   constructor(props) {
     super(props);
+    this.state = {walletReady: false};
+    this._getWallet();
+  }
+
+  async _getWallet() {
+    try {
+      var {address, balance} = await BitcoinWallet.getWallet();
+      this.address = address;
+      this.balance = balance;
+      this.setState(previousState => {
+        return { walletReady: true };
+      });
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   _recvSubmit = () => {
@@ -119,9 +133,11 @@ export default class HomePage extends Component<{}> {
   }
 
   render() {
+    let address = this.state.walletReady? this.address: '-';
+    let balance = this.state.walletReady? this.balance: '-';
     return (
       <View style={styles.container}>
-        <AccountPanel />
+        <AccountPanel address={address} balance={balance} />
         <TransactionList/>
         <View style={styles.bottomButtons}>
           <Button 
@@ -140,12 +156,6 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     backgroundColor: '#F5FCFF',
     padding: 5,
-  },
-  accountPanel: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    margin: 2,
-    elevation: 2,
   },
   transactions: {
     flex: 1,
@@ -173,15 +183,4 @@ const styles = StyleSheet.create({
     margin: 1,
     flex: 1,
   },
-  accountLabelContainer: {
-    flex: 1,
-    padding: 20,
-  },
-  accountValueContainer: {
-    flex: 1,
-    padding: 20,
-  },
-  accountQRCodeContainer: {
-    flex: 1
-  }
 });
