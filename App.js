@@ -4,6 +4,7 @@ import HomePage from './HomePage';
 import ReceivePage from './ReceivePage';
 import SendPage from './SendPage';
 import InfoPage from './InfoPage';
+import SplashScreen from './SplashScreen';
 
 import React, { Component } from 'react';
 import {
@@ -29,6 +30,7 @@ const App = StackNavigator(
 
 const RootStack = StackNavigator(
   {
+    Splash: { screen: SplashScreen },
     Main: { screen: App },
     Info: { screen: InfoPage },
   },
