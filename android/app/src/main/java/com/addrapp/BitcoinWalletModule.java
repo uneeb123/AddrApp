@@ -126,17 +126,16 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
         Iterator<TransactionOutput> iterOutputs = outputs.iterator();
         while (iterOutputs.hasNext()) {
           TransactionOutput output = iterOutputs.next();
-          if (received) {
-            if (output.isMine(wallet)) {
-              amountsJS.pushString(output.getValue().toFriendlyString());
-              addressJS.pushString(output.getAddressFromP2PKHScript(params).toString());
-              dateJS.pushString(tx.getUpdateTime().toString());
-            }
-          } else {
-            amountsJS.pushString("-" + output.getValue().toFriendlyString());
-            addressJS.pushString(output.getAddressFromP2PKHScript(params).toString());
-            dateJS.pushString(tx.getUpdateTime().toString());
+          // TODO: only display relevant outputs
+          amountsJS.pushString(output.getValue().toFriendlyString());
+          String addrStr;
+          try {
+            addrStr = output.getAddressFromP2PKHScript(params).toString();
+          } catch (NullPointerException e) {
+            addrStr = "Unknown";
           }
+          addressJS.pushString(addrStr);
+          dateJS.pushString(tx.getUpdateTime().toString());
         }
       }
       if (amountsJS.size() == 0) {
