@@ -5,6 +5,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
 import org.bitcoinj.core.Address;
@@ -51,7 +52,8 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
           bw.getWallet().addWatchedAddress(addr);
         }
         else {
-          addr = bw.getWallet().getWatchedAddresses().get(0);
+          List<Address> all_addresses = bw.getWallet().getWatchedAddresses();
+          addr = all_addresses.get(0);
         }
       }
       WritableMap map = Arguments.createMap();
@@ -87,10 +89,10 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void createTransaction(String amount, String to, Promise promise) {
-    Coin value = Coin.parseCoin("0.09");
-    Wallet wallet = bw.getWallet();
-    Address toAddr = Address.fromBase58(wallet.getParams(), to);
     try {
+      Coin value = Coin.parseCoin(amount);
+      Wallet wallet = bw.getWallet();
+      Address toAddr = Address.fromBase58(wallet.getParams(), to);
       WritableMap map = Arguments.createMap();
       Wallet.SendResult result = wallet.sendCoins(bw.getKit().peerGroup(), toAddr, value);
       map.putString("hash", result.tx.getHashAsString());
@@ -104,13 +106,13 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
   public void getTransactions(Promise promise) {
     try {
       WritableMap map = Arguments.createMap();
-      WritableStringArray amountsJS = new WritableStringArray();
-      WritableStringArray addressJS = new WritableStringArray();
-      WritableStringArray dateJS = new WritableStringArray();
+      WritableArray amountsJS = Arguments.createArray();
+      WritableArray addressJS = Arguments.createArray();
+      WritableArray dateJS = Arguments.createArray();
 
       Wallet wallet = bw.getWallet();
 
-      Set<Transaction> transactions = wallet.getTransactions(false);
+      List<Transaction> transactions = wallet.getTransactionsByTime();
       NetworkParameters params = wallet.getNetworkParameters();
 
       Iterator<Transaction> iterator = transactions.iterator();
@@ -136,6 +138,12 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
             dateJS.pushString(tx.getUpdateTime().toString());
           }
         }
+      }
+      if (amountsJS.size() == 0) {
+        throw new Exception();
+      }
+      if ((amountsJS.size() != addressJS.size()) && (addressJS.size() != dateJS.size())) {
+        throw new Exception();
       }
       map.putArray("amounts", amountsJS);
       map.putArray("addresses", addressJS);

@@ -20,11 +20,10 @@ class Transaction extends Component<{}> {
           <Text>{this.props.item.date}</Text>
         </View>
         <View style={styles.addrContainer}>
-          <Text>{this.props.item.addr}</Text>
+          <Text>{this.props.item.address}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text>{this.props.item.amount_bitcoin + "\n"}</Text>
-          <Text>{"$" + this.props.item.amount_dollar}</Text>
+          <Text>{this.props.item.amount + " BTC"}</Text>
         </View>
       </View>
     );
@@ -48,28 +47,37 @@ class AccountPanel extends Component {
 }
 
 class TransactionList extends Component<{}> {
+  
+  _parseData() {
+    amounts = this.props.amounts;
+    addresses = this.props.addresses;
+    dates = this.props.dates;
+
+    var txs = []
+    var total_number = amounts.length //all should be same length
+    if (total_number == 0) {
+      this.txs = [];
+    }
+    else {
+      for (var i = 1; i <= total_number; i++) {
+        var tx = {}
+        tx.key = i.toString();
+        tx.amount = amounts[i-1];
+        tx.address = addresses[i-1];
+        tx.date = dates[i-1];
+        txs.push(tx);
+      }
+      this.txs = txs;
+    }
+    console.log('tx: %j', this.txs);
+  }
+
   render() {
+    this._parseData();
     return (
       <View style={styles.transactions}>
         <FlatList 
-          data={[
-            {
-              key: '1',
-              date: '03/13/2018',
-              addr: '1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2',
-              amount_bitcoin: '0.05',
-              amount_dollar: '80.0',
-              incoming: true
-            },
-            {
-              key: '2',
-              date: '03/16/2018',
-              addr: '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy',
-              amount_bitcoin: '0.02',
-              amount_dollar: '35.0',
-              incoming: false
-            }
-          ]}
+          data={this.txs}
           renderItem={({item}) => <Transaction item={item}/>}
         />
       </View>
@@ -107,7 +115,7 @@ export default class HomePage extends Component<{}> {
 
   constructor(props) {
     super(props);
-    this.state = {walletReady: false};
+    this.state = {walletReady: false, txsReady: false};
     this._getWallet();
   }
 
@@ -117,7 +125,24 @@ export default class HomePage extends Component<{}> {
       this.address = address;
       this.balance = balance;
       this.setState(previousState => {
-        return { walletReady: true };
+        this._getTransactions();
+        previousState.walletReady = true;
+        return previousState;
+      });
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  async _getTransactions() {
+    try {
+      var {amounts, addresses, dates} = await BitcoinWallet.getTransactions();
+      this.all_amounts = amounts;
+      this.all_addresses = addresses;
+      this.all_dates = dates;
+      this.setState(previousState => {
+        previousState.txsReady = true;
+        return previousState;
       });
     } catch(e) {
       console.log(e);
@@ -135,10 +160,13 @@ export default class HomePage extends Component<{}> {
   render() {
     let address = this.state.walletReady? this.address: '-';
     let balance = this.state.walletReady? this.balance: '-';
+    let tx_amounts = this.state.txsReady? this.all_amounts: [];
+    let tx_addresses = this.state.txsReady? this.all_addresses: [];
+    let tx_dates = this.state.txsReady? this.all_dates: [];
     return (
       <View style={styles.container}>
         <AccountPanel address={address} balance={balance} />
-        <TransactionList/>
+        <TransactionList amounts={tx_amounts} addresses={tx_addresses} dates={tx_dates}/>
         <View style={styles.bottomButtons}>
           <Button 
             color='#298e82' title='Receive coins' onPress={this._recvSubmit}/>
