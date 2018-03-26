@@ -25,6 +25,7 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
 
   private ReactApplicationContext context;
   private BitcoinWalletAppKitInterface bw;
+  private Address addr;
 
   public BitcoinWalletModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -46,8 +47,10 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void getWallet(Promise promise) {
     try {
-      Address addr = bw.getWallet().freshReceiveAddress();
-      bw.getWallet().addWatchedAddress(addr);
+      if (addr == null) {
+        addr = bw.getWallet().freshReceiveAddress();
+        bw.getWallet().addWatchedAddress(addr);
+      }
       WritableMap map = Arguments.createMap();
       int waitCount = 0;
       while (!bw.getWallet().isConsistent()) {
