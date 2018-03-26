@@ -1,22 +1,6 @@
 package com.addrapp;
 
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.FilteredBlock;
-import org.bitcoinj.core.Peer;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.listeners.DownloadProgressTracker;
-import org.bitcoinj.wallet.Wallet;
-
-import java.util.Date;
-import java.util.List;
-
-import java.io.File;
-
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.Arguments;
@@ -24,6 +8,17 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.listeners.DownloadProgressTracker;
+import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.params.TestNet3Params;
+import org.bitcoinj.wallet.Wallet;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
 
 public class BitcoinWalletAppKitInterface {
 
@@ -47,6 +42,10 @@ public class BitcoinWalletAppKitInterface {
 
   public Wallet getWallet() {
     return kit.wallet();
+  }
+
+  public WalletAppKit getKit() {
+    return kit;
   }
 
   public boolean downloadBlockChain(boolean blocking) {

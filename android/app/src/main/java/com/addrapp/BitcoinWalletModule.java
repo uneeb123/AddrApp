@@ -1,41 +1,23 @@
 package com.addrapp;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.wallet.Wallet;
 
-import com.facebook.react.bridge.Dynamic;
-import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableType;
-import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableMap;
-
-import com.facebook.react.bridge.NativeModule;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.WritableNativeArray;
-
-import java.security.spec.ECField;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-
-import static java.lang.Thread.sleep;
 
 public class BitcoinWalletModule extends ReactContextBaseJavaModule {
 
@@ -101,6 +83,21 @@ public class BitcoinWalletModule extends ReactContextBaseJavaModule {
       }
     }
     return false;
+  }
+
+  @ReactMethod
+  public void createTransaction(String amount, String to, Promise promise) {
+    Coin value = Coin.parseCoin("0.09");
+    Wallet wallet = bw.getWallet();
+    Address toAddr = Address.fromBase58(wallet.getParams(), to);
+    try {
+      WritableMap map = Arguments.createMap();
+      Wallet.SendResult result = wallet.sendCoins(bw.getKit().peerGroup(), toAddr, value);
+      map.putString("hash", result.tx.getHashAsString());
+      promise.resolve(map);
+    } catch (Exception e) {
+      promise.reject(e);
+    }
   }
 
   @ReactMethod
