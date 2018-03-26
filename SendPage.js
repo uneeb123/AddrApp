@@ -22,8 +22,12 @@ export default class SendPage extends Component<{}> {
   async _sendBitcoin() {
     amount = this.state.amount;
     address = this.state.address;
-    var {hash} = await BitcoinWallet.createTransaction(amount, address);
-    console.log(hash);
+    try {
+      var {hash} = await BitcoinWallet.createTransaction(amount, address);
+      console.log(hash);
+    } catch(e) {
+      console.log(e);
+    }
     this.props.navigation.navigate('Home');
   }
 
