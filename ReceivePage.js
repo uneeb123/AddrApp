@@ -12,8 +12,12 @@ export default class ReceivePage extends Component<{}> {
   };
 
   render() {
+    const { params } = this.props.navigation.state;
+    const address = params ? params.address : '';
     return (
-      <View />
+      <View>
+        <Text>{address}</Text>
+      </View>
     );
   }
 }

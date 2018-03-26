@@ -23,7 +23,7 @@ class Transaction extends Component<{}> {
           <Text>{this.props.item.address}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text>{this.props.item.amount + " BTC"}</Text>
+          <Text>{this.props.item.amount}</Text>
         </View>
       </View>
     );
@@ -150,7 +150,8 @@ export default class HomePage extends Component<{}> {
   }
 
   _recvSubmit = () => {
-    this.props.navigation.navigate('Receive')
+    let address = this.state.walletReady? this.address: '';
+    this.props.navigation.navigate('Receive', {address: address})
   }
 
   _sendSubmit = () => {
