@@ -35,7 +35,7 @@ class AccountPanel extends Component {
     return (
       <View style={{backgroundColor: 'white', margin: 2, elevation: 2}}>
         <View>
-          <Text style={{fontFamily: 'monospace'}}>mBTC</Text>
+          <Text style={{fontFamily: 'monospace'}}>BTC</Text>
         </View>
         <View>
           <Text>{this.props.address}</Text>

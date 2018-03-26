@@ -15,8 +15,8 @@ export default class SendPage extends Component<{}> {
 
   constructor(props) {
     super(props);
-    this.state = { amount: '0.00' };
-    this.state = { address: 'PublicKeyAddressHere' };
+    defaultState = { amount: '0.00', address: 'PublicKeyAddressHere' };
+    this.state = defaultState;
   }
 
   async _sendBitcoin() {
@@ -27,20 +27,34 @@ export default class SendPage extends Component<{}> {
     this.props.navigation.navigate('Home');
   }
 
+  _setAmount(amount) {
+    this.setState((previousState) => {
+      previousState.amount = amount;
+      return previousState;
+    });
+  }
+
+  _setAddress(address) {
+    this.setState((previousState) => {
+      previousState.address = address;
+      return previousState;
+    });
+  }
+
   render() {
     return (
       <View>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => this.setState({amount})}
-        value={this.state.amount}
-      />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => this.setState({address})}
-        value={this.state.address}
-      />
-      <Button title='Submit' onPress={() => this._sendBitcoin()}/>
+        <TextInput
+          style={{height: 40}}
+          onChangeText={(text) => this._setAmount(text)}
+          value={this.state.amount}
+        />
+        <TextInput
+          style={{height: 40}}
+          onChangeText={(text) => this._setAddress(text)}
+          value={this.state.address}
+        />
+        <Button title='Submit' onPress={() => this._sendBitcoin()}/>
       </View>
     );
   }
