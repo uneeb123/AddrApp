@@ -10,11 +10,16 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
+import org.bitcoinj.core.listeners.TransactionConfidenceEventListener;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
+import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
 
 import java.io.File;
 import java.util.Date;
@@ -28,7 +33,10 @@ public class BitcoinWalletAppKitInterface {
   private AddrWalletKit kit;
   private NetworkParameters params;
   private ReactApplicationContext reactContext;
-  private AddrDownloadListener listener = new AddrDownloadListener();
+  private AddrDownloadListener downloadListener = new AddrDownloadListener();
+  private AddrCoinsReceivedListener receivedListener = new AddrCoinsReceivedListener();
+  private AddrCoinsSentListener sentListener = new AddrCoinsSentListener();
+  private AddrTransactionConfidenceListener transactionListener = new AddrTransactionConfidenceListener();
 
   BitcoinWalletAppKitInterface(ReactApplicationContext _reactContext) {
     reactContext = _reactContext;
@@ -49,7 +57,7 @@ public class BitcoinWalletAppKitInterface {
   }
 
   public boolean downloadBlockChain(boolean blocking) {
-    kit.setDownloadListener(listener);
+    kit.setDownloadListener(downloadListener);
     kit.setBlockingStartup(blocking);
     kit.startAsync();
     debug("Blockchain sync initiated");
@@ -95,6 +103,9 @@ public class BitcoinWalletAppKitInterface {
 
     @Override
     protected void onSetupCompleted() {
+      this.wallet().addCoinsReceivedEventListener(receivedListener);
+      this.wallet().addCoinsSentEventListener(sentListener);
+      this.wallet().addTransactionConfidenceEventListener(transactionListener);
     }
   }
 
@@ -113,6 +124,26 @@ public class BitcoinWalletAppKitInterface {
       super.doneDownload();
 
       sendEvent(reactContext, "syncCompleted", null);
+    }
+  }
+
+
+  private class AddrCoinsReceivedListener implements WalletCoinsReceivedEventListener {
+    @Override
+    public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+    }
+  }
+
+  private class AddrCoinsSentListener implements WalletCoinsSentEventListener {
+    @Override
+    public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+
+    }
+  }
+
+  private class AddrTransactionConfidenceListener implements TransactionConfidenceEventListener {
+    @Override
+    public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
     }
   }
 }
